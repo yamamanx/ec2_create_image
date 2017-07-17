@@ -49,7 +49,7 @@ def lambda_handler(event, context):
         if len(response) > 0:
             for res in response:
                 slack.sendMessage(
-                    '{target_name}\n{response}'.format(
+                    '{target_name}\n{res} is deregisted'.format(
                         target_name=target_name,
                         response=response
                     ),
@@ -60,7 +60,7 @@ def lambda_handler(event, context):
         if len(response) > 0:
             for res in response:
                 slack.sendMessage(
-                    '{target_name}\n{response}'.format(
+                    '{target_name}\n{res} is deleted'.format(
                         target_name=target_name,
                         response=res
                     ),

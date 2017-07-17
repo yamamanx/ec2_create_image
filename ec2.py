@@ -40,7 +40,8 @@ class Ec2(object):
             for device in info['devices']:
                 snap_shot = self.resource.Snapshot(
                     device['Ebs']['SnapshotId'])
-                response.append(snap_shot.delete())
+                snap_shot.delete()
+                response.append(device['Ebs']['SnapshotId'])
         return response
 
 
@@ -48,7 +49,8 @@ class Ec2(object):
         response = []
         for info in image_infos:
             image = self.resource.Image(info['image_id'])
-            response.append(image.deregister())
+            image.deregister()
+            response.append(info['image_id'])
         return response
 
 
