@@ -7,10 +7,16 @@
 
 ## AWS Lambdaで実行します
 
-1. ダウンロードしたコードをzipにしてLambda関数を作成します。
+1. ダウンロードしたコードにrequestsをインストールしてzipにしてLambda関数を作成します。
 1. Slackでチームを作成、または既存のSlackでIncoming Webhookを設定します。
 1. Slackで #ec2_create_imageチャンネルを作ります。
 1. 環境変数を設定します。
+
+### (参考)requestsのインストール
+
+```
+$ pip install requests -t .
+```
 
 
 ## 環境変数
