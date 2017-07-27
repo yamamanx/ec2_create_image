@@ -30,6 +30,7 @@ def lambda_handler(event, context):
             return
 
         response = ec2.create_images(instance_ids, target_name)
+        ec2.create_tag_for_image(response, target_name)
         logger.info(response)
         slack.sendMessage(
             '{target_name}\n{response}'.format(
@@ -39,10 +40,10 @@ def lambda_handler(event, context):
             "#ec2_create_image"
         )
 
-        image_infos = ec2.get_image_info_by_name(
+        image_infos = ec2.get_image_info_by_tag(
             target_name,
             purge_days=int(os.environ.get('PURGE_DAYS', '7')),
-            owners = os.environ['AWS_ACCOUNT_ID']
+            owners=os.environ['AWS_ACCOUNT_ID']
         )
 
         response = ec2.deregister_images(image_infos)
