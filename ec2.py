@@ -36,7 +36,8 @@ class Ec2(object):
             image.create_tags(
                 Tags=[
                     {
-                        'AutoCreateFor': target_name
+                        'Key': 'AutoCreateFor',
+                        'Value': target_name
                     }
                 ]
             )
@@ -85,8 +86,8 @@ class Ec2(object):
         )
         for image in response['Images']:
             for tag in image.tags:
-                if 'AutoCreateFor' in tag:
-                    if tag['AutoCreateFor'] == target_name:
+                if tag['Key'] == 'AutoCreateFor':
+                    if tag['Value'] == target_name:
                         create_date = util.datetime_from_str(
                             image['CreationDate'])
                         if util.now_time() >= util.after_day(
