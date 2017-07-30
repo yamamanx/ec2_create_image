@@ -28,7 +28,12 @@ class Ec2(object):
                 date=util.today_str()
             )
             response.append(instance.create_image(
-                Name=image_name))
+                Name=image_name,
+                Description='Auto create image for {name}'.format(
+                    name=target_name
+                ),
+                NoReboot=False
+            ))
         return response
 
     def create_tag_for_image(self, images, target_name):
@@ -85,19 +90,20 @@ class Ec2(object):
             Owners=[owners]
         )
         for image in response['Images']:
-            for tag in image.tags:
-                if tag['Key'] == 'AutoCreateFor':
-                    if tag['Value'] == target_name:
-                        create_date = util.datetime_from_str(
-                            image['CreationDate'])
-                        if util.now_time() >= util.after_day(
-                                create_date, purge_days):
-                            targets.append(
-                                {
-                                    'image_id': image['ImageId'],
-                                    'devices': image['BlockDeviceMappings']
-                                }
-                            )
+            if 'Tags' in image:
+                for tag in image['Tags']:
+                    if tag['Key'] == 'AutoCreateFor':
+                        if tag['Value'] == target_name:
+                            create_date = util.datetime_from_str(
+                                image['CreationDate'])
+                            if util.now_time() >= util.after_day(
+                                    create_date, purge_days):
+                                targets.append(
+                                    {
+                                        'image_id': image['ImageId'],
+                                        'devices': image['BlockDeviceMappings']
+                                    }
+                                )
         return targets
 
     def get_instance_id_by_name(self, target_name):
